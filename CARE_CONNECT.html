@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareConnect — Connected Telehealth Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary-50: #EFF6FF; --primary-100: #DBEAFE; --primary-200: #BFDBFE;
+    --primary-400: #3B82F6; --primary-600: #2563EB; --primary-800: #1E40AF;
+    --green-50: #EFF6FF; --green-100: #DBEAFE; --green-200: #BFDBFE;
+    --green-400: #2563EB; --green-600: #1D4ED8; --green-800: #1E3A8A;
+    --teal-50: #F0FDFA; --teal-100: #CCFBF1; --teal-200: #99F6E4;
+    --teal-400: #14B8A6; --teal-600: #0D9488; --teal-800: #115E59;
+    --amber-50: #FFFBEB; --amber-100: #FEF3C7; --amber-200: #FDE68A;
+    --amber-400: #D97706; --amber-800: #92400E;
+    --blue-50: #F0F9FF; --blue-100: #E0F2FE; --blue-400: #0284C7;
+    --blue-600: #0369A1; --blue-800: #075985;
+    --coral-50: #FFF1F2; --coral-100: #FFE4E6; --coral-400: #F43F5E;
+    --coral-600: #E11D48; --coral-800: #9F1239;
+    --gray-50: #F8FAFC; --gray-100: #E2E8F0; --gray-400: #94A3B8;
+    --gray-600: #64748B; --gray-800: #1E293B;
+    --font-main: 'Plus Jakarta Sans', sans-serif;
+    --font-hindi: 'Noto Serif Devanagari', serif;
+    --radius: 14px; --radius-sm: 8px; --radius-lg: 20px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: var(--font-main); background: #f8fafc; color: #0f172a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  .screen { display:none; min-height: 100vh; padding-bottom: 60px; }
+  .screen.active { display:block; }
+
+  /* ── TOP NAV ── */
+  .topnav {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; position: sticky; top:0; z-index:100;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+  }
+  .logo { display:flex; align-items:center; gap:10px; cursor:pointer; }
+  .logo-icon { width:36px; height:36px; background: linear-gradient(135deg, #2563EB, #0D9488); border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 12px rgba(37,99,235,0.25); }
+  .logo-icon svg { width:20px; height:20px; fill:#fff; }
+  .logo-text { font-size:17px; font-weight:800; color: #0f172a; letter-spacing: -0.3px; }
+  .logo-text span { color: #2563EB; }
+  .logo-sub { font-size:10px; color: #0D9488; font-family: var(--font-hindi); display:block; font-weight:600; }
+  .lang-toggle { display:flex; background: #f1f5f9; border-radius:20px; overflow:hidden; border:1px solid #e2e8f0; }
+  .lang-btn { border:none; background:none; padding:5px 12px; font-size:11px; cursor:pointer; font-family:var(--font-main); color: var(--gray-600); font-weight:600; transition: all 0.15s; }
+  .lang-btn.active { background: #2563EB; color:#fff; border-radius:20px; }
+
+  /* ── HERO ── */
+  .hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 52%, #0d9488 100%); color:#fff; padding: 68px 24px 84px; text-align:center; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-60px; right:-60px; width:260px; height:260px; border-radius:50%; background:radial-gradient(circle, rgba(13,148,136,0.25) 0%, transparent 70%); }
+  .hero::after { content:''; position:absolute; bottom:-70px; left:-40px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle, rgba(37,99,235,0.25) 0%, transparent 70%); }
+  .hero-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.22); border-radius:20px; padding:6px 16px; font-size:11px; font-weight:600; margin-bottom:18px; letter-spacing:0.3px; backdrop-filter:blur(8px); }
+  .hero-badge::before { content:''; width:7px; height:7px; border-radius:50%; background:#14B8A6; display:inline-block; }
+  .hero h1 { font-size:34px; font-weight:800; line-height:1.2; margin-bottom:10px; letter-spacing: -0.5px; }
+  .hero-hindi { font-family:var(--font-hindi); font-size:20px; color:rgba(255,255,255,0.85); margin-bottom:16px; font-weight:600; }
+  .hero p { font-size:14px; color:rgba(255,255,255,0.85); max-width:500px; margin: 0 auto 32px; line-height:1.7; }
+  .hero-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn-primary { background:#fff; color: #1e3a8a; border:none; padding:13px 26px; border-radius:var(--radius); font-size:14px; font-weight:700; cursor:pointer; font-family:var(--font-main); transition: transform 0.15s, box-shadow 0.15s; box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+  .btn-primary:hover { transform:translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.22); }
+  .btn-outline { background:rgba(255,255,255,0.08); color:#fff; border:1.5px solid rgba(255,255,255,0.4); padding:13px 26px; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font-main); transition: background 0.15s, transform 0.15s; backdrop-filter:blur(6px); }
+  .btn-outline:hover { background:rgba(255,255,255,0.18); transform:translateY(-1px); }
+
+  /* ── CARDS & SECTIONS ── */
+  .section { padding: 40px 20px; }
+  .section-title { font-size:21px; font-weight:700; color:#0f172a; margin-bottom:5px; letter-spacing: -0.3px; }
+  .section-sub { font-size:13px; color: var(--gray-600); margin-bottom:26px; }
+  .card-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:14px; }
+  .card { background:#fff; border-radius:var(--radius); padding:22px 18px; border:1px solid #e2e8f0; cursor:pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04); position:relative; overflow:hidden; }
+  .card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: transparent; transition: background 0.2s; }
+  .card:hover { transform:translateY(-3px); box-shadow:0 12px 28px -4px rgba(37,99,235,0.12); border-color: #bfdbfe; }
+  .card:hover::before { background: linear-gradient(90deg, #2563EB, #0D9488); }
+  .card-icon { width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; font-size:22px; background: #eff6ff; }
+  .card-title { font-size:14px; font-weight:700; color:#0f172a; margin-bottom:4px; }
+  .card-desc { font-size:12px; color: var(--gray-600); line-height:1.55; }
+
+  /* ── STATS ROW ── */
+  .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:24px 20px; }
+  .stat-card { background:#fff; border-radius:var(--radius); padding:18px 14px; text-align:center; border:1px solid #e2e8f0; box-shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.04); border-top: 3px solid #2563EB; }
+  .stat-card:nth-child(2) { border-top-color: #0D9488; }
+  .stat-card:nth-child(3) { border-top-color: #F59E0B; }
+  .stat-num { font-size:24px; font-weight:800; color: #1e3a8a; letter-spacing: -0.5px; }
+  .stat-label { font-size:11px; color: var(--gray-600); margin-top:3px; font-weight:500; }
+
+  /* ── DASHBOARD ── */
+  .dash-header { background: linear-gradient(135deg, #1e3a8a, #0f172a); color:#fff; padding:24px 20px; }
+  .dash-header h2 { font-size:20px; font-weight:700; letter-spacing: -0.3px; }
+  .dash-header p { font-size:12px; opacity:0.85; margin-top:3px; }
+  .dash-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:18px; }
+  .dash-card { background:#fff; border-radius:var(--radius); padding:16px; border:1px solid #e2e8f0; box-shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.04); }
+  .dash-card-title { font-size:11px; font-weight:700; color: var(--gray-600); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:12px; }
+  .appointment-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid #f1f5f9; }
+  .appt-dot { width:9px; height:9px; border-radius:50%; background: #2563EB; flex-shrink:0; }
+  .appt-info { flex:1; }
+  .appt-name { font-size:13px; font-weight:600; color:#0f172a; }
+  .appt-time { font-size:11px; color: var(--gray-600); }
+  .appt-badge { font-size:10px; padding:3px 9px; border-radius:12px; font-weight:600; }
+  .badge-green { background: #eff6ff; color: #1d4ed8; }
+  .badge-amber { background: #fffbeb; color: #b45309; }
+  .badge-blue { background: #f0fdf4; color: #15803d; }
+  .badge-red { background: #fff1f2; color: #be123c; }
+  .full-width { grid-column:1/-1; }
+  .action-row { display:flex; gap:10px; padding:14px 18px; border-top:1px solid #e2e8f0; flex-wrap:wrap; background:#f8fafc; border-bottom-left-radius:var(--radius); border-bottom-right-radius:var(--radius); }
+  .action-btn { flex:1; min-width:105px; padding:11px 10px; border-radius:var(--radius-sm); font-size:12px; font-weight:700; cursor:pointer; font-family:var(--font-main); text-align:center; border:none; transition: all 0.15s; }
+  .action-btn:hover { transform:translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .ab-green { background: #2563EB; color:#fff; }
+  .ab-green:hover { background: #1D4ED8; }
+  .ab-teal { background: #0D9488; color:#fff; }
+  .ab-teal:hover { background: #0F766E; }
+  .ab-amber { background: #F59E0B; color: #fff; }
+  .ab-blue { background: #0284C7; color:#fff; }
+  .ab-outline { background:#fff; color: #2563EB; border:1.5px solid #bfdbfe; }
+  .ab-outline:hover { background: #eff6ff; }
+
+  /* ── APPOINTMENT BOOKING ── */
+  .booking-section { padding:18px; }
+  .booking-card { background:#fff; border-radius:var(--radius); border:1px solid #e2e8f0; padding:18px; margin-bottom:14px; box-shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.04); }
+  .doctor-item { display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid #f1f5f9; cursor:pointer; transition: all 0.15s; }
+  .doctor-item:last-child { border-bottom:none; }
+  .doctor-avatar { width:46px; height:46px; border-radius:50%; background: #eff6ff; border:2px solid #bfdbfe; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700; color: #2563EB; flex-shrink:0; }
+  .doctor-info { flex:1; }
+  .doctor-name { font-size:14px; font-weight:700; color:#0f172a; }
+  .doctor-spec { font-size:11px; color: var(--gray-600); }
+  .doctor-avail { font-size:11px; color: #0D9488; font-weight:600; }
+  .doctor-fee { font-size:13px; font-weight:700; color: #1e3a8a; }
+  .slot-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
+  .slot { background: #eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:8px 6px; text-align:center; font-size:11px; font-weight:600; color: #1e40af; cursor:pointer; transition: all 0.15s; }
+  .slot:hover, .slot.selected { background: #2563EB; color:#fff; border-color: #2563EB; box-shadow: 0 3px 8px rgba(37,99,235,0.25); }
+  .slot.unavail { background: var(--gray-50); color: var(--gray-400); cursor:not-allowed; border-color:#e2e8f0; }
+  .form-field { margin-bottom:14px; }
+  .form-label { font-size:12px; font-weight:600; color: #334155; margin-bottom:5px; display:block; }
+  .form-input { width:100%; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid #cbd5e1; font-size:13px; font-family:var(--font-main); background:#fff; color:#0f172a; transition: border-color 0.15s; }
+  .form-input:focus { outline:none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+  .form-select { width:100%; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid #cbd5e1; font-size:13px; font-family:var(--font-main); background:#fff; color:#0f172a; }
+
+  /* ── AI SYMPTOM ── */
+  .symptom-progress { display:flex; gap:6px; padding:14px 18px; }
+  .step-dot { flex:1; height:5px; border-radius:3px; background: #e2e8f0; }
+  .step-dot.done { background: #2563EB; }
+  .step-dot.active { background: #0D9488; }
+  .question-card { background:#fff; border-radius:var(--radius); border:1px solid #e2e8f0; padding:22px; margin:0 18px 14px; box-shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.04); }
+  .q-number { font-size:11px; color: #0D9488; font-weight:700; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px; }
+  .q-text { font-size:15px; font-weight:600; color:#0f172a; margin-bottom:4px; }
+  .q-hindi { font-family:var(--font-hindi); font-size:13px; color: var(--gray-600); margin-bottom:18px; }
+  .option-btn { display:block; width:100%; text-align:left; padding:11px 16px; border-radius:var(--radius-sm); border:1px solid #e2e8f0; background:#fff; font-size:13px; font-family:var(--font-main); color:#0f172a; cursor:pointer; margin-bottom:9px; transition: all 0.15s; }
+  .option-btn:hover { border-color: #93c5fd; background: #eff6ff; color: #1e3a8a; }
+  .option-btn.selected { border-color: #2563EB; background: #eff6ff; color: #1d4ed8; font-weight:600; box-shadow: 0 0 0 1px #2563EB; }
+  .ai-thinking { display:flex; align-items:center; gap:12px; padding:16px; background: #eff6ff; border-radius:var(--radius-sm); margin:0 18px; border:1px solid #bfdbfe; }
+  .thinking-dots span { display:inline-block; width:7px; height:7px; border-radius:50%; background: #2563EB; animation: bounce 0.9s infinite; margin:0 2px; }
+  .thinking-dots span:nth-child(2) { animation-delay:0.2s; }
+  .thinking-dots span:nth-child(3) { animation-delay:0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+
+  /* ── VIDEO CONSULTATION ── */
+  .video-area { background:#0b1329; border-radius:var(--radius); margin:14px; overflow:hidden; position:relative; box-shadow: 0 4px 16px rgba(11,19,41,0.2); }
+  .video-main { aspect-ratio:16/9; background: linear-gradient(135deg,#0f172a,#1e3a8a); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px; }
+  .video-avatar { width:84px; height:84px; border-radius:50%; background: linear-gradient(135deg, #2563EB, #0D9488); display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:800; color:#fff; border:3px solid rgba(255,255,255,0.25); box-shadow:0 8px 24px rgba(0,0,0,0.3); }
+  .video-name { color:rgba(255,255,255,0.95); font-size:15px; font-weight:600; }
+  .video-status { color:rgba(255,255,255,0.6); font-size:11px; }
+  .video-self { position:absolute; bottom:12px; right:12px; width:88px; background: #0D9488; border-radius:10px; aspect-ratio:4/3; display:flex; align-items:center; justify-content:center; border:2px solid rgba(255,255,255,0.3); }
+  .video-self-text { color:rgba(255,255,255,0.9); font-size:10px; font-weight:600; }
+  .video-controls { display:flex; gap:10px; justify-content:center; padding:14px; background:#fff; border-top:1px solid #e2e8f0; }
+  .vc-btn { width:46px; height:46px; border-radius:50%; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:17px; transition: transform 0.15s; }
+  .vc-btn:hover { transform:scale(1.1); }
+  .vc-green { background: #2563EB; color:#fff; }
+  .vc-red { background: #F43F5E; color:#fff; }
+  .vc-gray { background: #f1f5f9; color:#475569; }
+  .chat-area { background:#fff; margin:0 14px 14px; border-radius:var(--radius); border:1px solid #e2e8f0; }
+  .chat-messages { padding:14px; max-height:150px; overflow-y:auto; }
+  .chat-msg { margin-bottom:10px; }
+  .msg-sender { font-size:11px; font-weight:700; color: #2563EB; margin-bottom:3px; }
+  .msg-text { font-size:12px; background: #f1f5f9; padding:8px 12px; border-radius:0 var(--radius-sm) var(--radius-sm) var(--radius-sm); display:inline-block; color:#0f172a; }
+  .msg-text.own { background: #eff6ff; color:#1e3a8a; }
+  .chat-input-row { display:flex; gap:8px; padding:10px 14px; border-top:1px solid #e2e8f0; }
+  .chat-input { flex:1; padding:8px 12px; border-radius:var(--radius-sm); border:1px solid #cbd5e1; font-size:12px; font-family:var(--font-main); }
+  .chat-input:focus { outline:none; border-color:#2563EB; }
+
+  /* ── PRESCRIPTION ── */
+  .rx-card { background:#fff; border-radius:var(--radius); border:1px solid #e2e8f0; margin:14px; overflow:hidden; box-shadow: 0 4px 12px rgba(15,23,42,0.05); }
+  .rx-header { background: linear-gradient(135deg, #1e3a8a 0%, #0d9488 100%); color:#fff; padding:18px 20px; display:flex; justify-content:space-between; align-items:flex-start; }
+  .rx-clinic { font-size:17px; font-weight:800; letter-spacing:-0.3px; }
+  .rx-clinic-sub { font-family:var(--font-hindi); font-size:12px; opacity:0.85; font-weight:600; }
+  .rx-date { font-size:11px; opacity:0.8; text-align:right; }
+  .rx-patient { padding:14px 20px; border-bottom:1px solid #e2e8f0; display:grid; grid-template-columns:1fr 1fr; gap:10px; background: #f8fafc; }
+  .rx-field { font-size:12px; }
+  .rx-field-label { color: var(--gray-600); font-size:11px; font-weight:500; }
+  .rx-field-val { font-weight:600; color:#0f172a; margin-top:2px; }
+  .rx-symbol { font-size:32px; color: #2563EB; padding:14px 20px 0; font-weight:300; font-family:serif; }
+  .rx-medicine { padding:10px 20px; display:flex; align-items:flex-start; gap:12px; border-bottom:1px solid #f1f5f9; }
+  .rx-med-num { width:22px; height:22px; border-radius:50%; background: #2563EB; color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; }
+  .rx-med-name { font-size:13px; font-weight:700; color:#0f172a; }
+  .rx-med-dose { font-size:11px; color: var(--gray-600); }
+  .rx-advice { padding:14px 20px; background: #fffbeb; border-top:1px solid #fef3c7; }
+  .rx-advice-title { font-size:11px; font-weight:700; color: #b45309; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px; }
+  .rx-advice-text { font-size:12px; color: #92400e; line-height:1.6; }
+  .rx-footer { padding:14px 20px; display:flex; justify-content:flex-end; border-top:1px solid #e2e8f0; }
+  .rx-sign-line { border-top:1px solid #0f172a; padding-top:4px; font-size:11px; color: var(--gray-600); margin-top:16px; font-weight:500; }
+
+  /* ── HEALTH WORKER ── */
+  .hw-header { background: linear-gradient(135deg, #0f172a, #1e3a8a); color:#fff; padding:22px 20px; }
+  .offline-banner { background: #fffbeb; border:1px solid #fef3c7; border-radius:var(--radius-sm); margin:14px; padding:11px 16px; display:flex; align-items:center; gap:12px; }
+  .offline-dot { width:9px; height:9px; border-radius:50%; background: #f59e0b; flex-shrink:0; }
+  .offline-text { font-size:12px; color: #92400e; font-weight:500; }
+  .patient-list { padding:0 14px 14px; }
+  .patient-row { background:#fff; border-radius:var(--radius); border:1px solid #e2e8f0; padding:14px; margin-bottom:10px; display:flex; align-items:center; gap:14px; cursor:pointer; transition: all 0.15s; }
+  .patient-row:hover { border-color: #2563EB; transform:translateY(-1px); box-shadow:0 4px 12px rgba(37,99,235,0.08); }
+  .patient-initial { width:40px; height:40px; border-radius:50%; background: #eff6ff; color: #2563EB; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .patient-info { flex:1; }
+  .patient-name { font-size:13px; font-weight:700; color:#0f172a; }
+  .patient-village { font-size:11px; color: var(--gray-600); }
+  .patient-status { font-size:10px; padding:3px 9px; border-radius:10px; font-weight:600; }
+  .sync-bar { background:#fff; border-top:1px solid #e2e8f0; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; }
+  .sync-info { font-size:12px; color: var(--gray-600); }
+  .sync-btn { background: #2563EB; color: #fff; border:none; padding:9px 18px; border-radius:var(--radius-sm); font-size:12px; font-weight:700; cursor:pointer; font-family:var(--font-main); transition: opacity 0.15s; }
+  .sync-btn:hover { opacity:0.9; }
+
+  /* ── MISC UTILITIES ── */
+  .back-btn { display:flex; align-items:center; gap:6px; padding:12px 18px; font-size:13px; color: var(--gray-600); cursor:pointer; border:none; background:none; font-family:var(--font-main); font-weight:600; }
+  .back-btn:hover { color: #2563EB; }
+  .success-screen { text-align:center; padding:48px 24px; }
+  .success-icon { width:68px; height:68px; border-radius:50%; background: #eff6ff; border:2px solid #bfdbfe; display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:30px; }
+  .success-title { font-size:21px; font-weight:800; color: #1e3a8a; margin-bottom:8px; }
+  .success-sub { font-size:13px; color: var(--gray-600); margin-bottom:26px; }
+  .info-box { background: #eff6ff; border-left:4px solid #2563EB; border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:12px 16px; margin:0 18px 14px; }
+  .info-box p { font-size:12px; color: #1e40af; line-height:1.6; }
+  .tag { display:inline-block; background: #eff6ff; color: #1d4ed8; font-size:10px; padding:3px 9px; border-radius:10px; font-weight:600; margin:2px; }
+  .divider { height:1px; background: #e2e8f0; margin:6px 0; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav { display:flex; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top:1px solid #e2e8f0; padding:8px 0 6px; position:fixed; bottom:0; left:0; right:0; z-index:99; }
+  .bnav-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 0; background:none; border:none; cursor:pointer; font-size:10px; color: var(--gray-600); font-family:var(--font-main); font-weight:500; transition: color 0.15s; }
+  .bnav-btn.active, .bnav-btn:hover { color: #2563EB; font-weight:700; }
+  .bnav-icon { font-size:19px; }
+
+  /* ── PRINT / EXPORT ── */
+  @media print {
+    .topnav, .bottom-nav, .back-btn, .action-row, .sync-bar { display:none !important; }
+    .screen { padding-bottom:0; }
+    body { background:#fff; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════
+     TOP NAVIGATION
+═══════════════════════════════ -->
+<div class="topnav">
+  <div class="logo" onclick="showScreen('home')">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M19 14V10H15V6H11V10H7V14H11V18H15V14H19ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z"/></svg>
+    </div>
+    <div>
+      <span class="logo-text">Care<span>Connect</span></span>
+      <span class="logo-sub">केयरकनेक्ट · TeleHealth</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="lang-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="lang-hi" onclick="setLang('hi')">हि</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     SCREEN 1: HOME / LANDING
+═══════════════════════════════ -->
+<div class="screen active" id="screen-home">
+  <div class="hero">
+    <div class="hero-badge" data-en="Next-Gen Telehealth · CareConnect" data-hi="स्मार्ट स्वास्थ्य सेवा · केयरकनेक्ट">Next-Gen Telehealth · CareConnect</div>
+    <h1 data-en="Intelligent Healthcare,<br>Connected Anywhere" data-hi="गुणवत्तापूर्ण स्वास्थ्य सेवा,<br>आपके पास">Intelligent Healthcare,<br>Connected Anywhere</h1>
+    <p class="hero-hindi">विशेषज्ञ डॉक्टरों से परामर्श — कभी भी, कहीं भी</p>
+    <p data-en="Instant access to top specialist doctors. Book consultations, assess symptoms with AI, and receive digital prescriptions seamlessly." data-hi="विशेषज्ञ डॉक्टरों से तुरंत जुड़ें। अपॉइंटमेंट बुक करें, AI लक्षण जांच करें और डिजिटल नुस्खा पाएं।">Instant access to top specialist doctors. Book consultations, assess symptoms with AI, and receive digital prescriptions seamlessly.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showScreen('patient-dash')" data-en="I'm a Patient" data-hi="मैं मरीज हूँ">I'm a Patient</button>
+      <button class="btn-outline" onclick="showScreen('doctor-dash')" data-en="I'm a Doctor" data-hi="मैं डॉक्टर हूँ">I'm a Doctor</button>
+      <button class="btn-outline" onclick="showScreen('health-worker')" data-en="Health Worker" data-hi="स्वास्थ्य कार्यकर्ता">Health Worker</button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">2,847</div>
+      <div class="stat-label" data-en="Consultations" data-hi="परामर्श">Consultations</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">124</div>
+      <div class="stat-label" data-en="Doctors" data-hi="डॉक्टर">Doctors</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">312</div>
+      <div class="stat-label" data-en="Care Centers" data-hi="स्वास्थ्य केंद्र">Care Centers</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" data-en="Our Services" data-hi="हमारी सेवाएं">Our Services</div>
+    <div class="section-sub" data-en="Modern telemedicine & clinical care solutions" data-hi="आधुनिक टेलीमेडिसिन और स्वास्थ्य सेवाएं">Modern telemedicine & clinical care solutions</div>
+    <div class="card-grid">
+      <div class="card" onclick="showScreen('booking')">
+        <div class="card-icon" style="background:var(--green-50);">📅</div>
+        <div class="card-title" data-en="Book Appointment" data-hi="अपॉइंटमेंट बुक करें">Book Appointment</div>
+        <div class="card-desc" data-en="Schedule a consultation with a specialist" data-hi="विशेषज्ञ से परामर्श का समय लें">Schedule a consultation with a specialist</div>
+      </div>
+      <div class="card" onclick="showScreen('symptom')">
+        <div class="card-icon" style="background:var(--teal-50);">🤖</div>
+        <div class="card-title" data-en="AI Symptom Check" data-hi="AI लक्षण जांच">AI Symptom Check</div>
+        <div class="card-desc" data-en="Describe symptoms before consultation" data-hi="परामर्श से पहले लक्षण बताएं">Describe symptoms before consultation</div>
+      </div>
+      <div class="card" onclick="showScreen('video')">
+        <div class="card-icon" style="background:var(--blue-50);">📹</div>
+        <div class="card-title" data-en="Video Consult" data-hi="वीडियो परामर्श">Video Consult</div>
+        <div class="card-desc" data-en="Face-to-face consultation with doctor" data-hi="डॉक्टर से आमने-सामने बात करें">Face-to-face consultation with doctor</div>
+      </div>
+      <div class="card" onclick="showScreen('prescription')">
+        <div class="card-icon" style="background:var(--amber-50);">💊</div>
+        <div class="card-title" data-en="My Prescriptions" data-hi="मेरे नुस्खे">My Prescriptions</div>
+        <div class="card-desc" data-en="View and download digital prescriptions" data-hi="डिजिटल नुस्खे देखें और डाउनलोड करें">View and download digital prescriptions</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <p data-en="🔒 CareConnect is a digital telehealth prototype. No real medical data is collected. All consultations shown are for demonstration purposes only." data-hi="🔒 केयरकनेक्ट एक डिजिटल टेलीहेल्थ प्रोटोटाइप है। कोई वास्तविक चिकित्सा डेटा एकत्र नहीं किया जाता।">🔒 CareConnect is a digital telehealth prototype. No real medical data is collected. All consultations shown are for demonstration purposes only.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     SCREEN 2: PATIENT DASHBOARD
+═══════════════════════════════ -->
+<div class="screen" id="screen-patient-dash">
+  <div class="dash-header" style="background:linear-gradient(90deg,var(--green-600) 0%,var(--teal-600) 100%);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div style="font-size:12px;opacity:0.75;" data-en="Good morning," data-hi="सुप्रभात,">Good morning,</div>
+        <h2>Ramesh Kumar 👋</h2>
+        <p data-en="Rampur Village, Sultanpur Dist." data-hi="रामपुर गाँव, सुल्तानपुर जिला">Rampur Village, Sultanpur Dist.</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.15);border-radius:var(--radius-sm);padding:8px 12px;text-align:center;">
+        <div style="font-size:18px;font-weight:700;">3</div>
+        <div style="font-size:10px;opacity:0.8;" data-en="Upcoming" data-hi="आगामी">Upcoming</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-card full-width">
+      <div class="dash-card-title" data-en="Upcoming Appointments" data-hi="आगामी अपॉइंटमेंट">Upcoming Appointments</div>
+      <div class="appointment-item">
+        <div class="appt-dot"></div>
+        <div class="appt-info">
+          <div class="appt-name">Dr. Priya Sharma</div>
+          <div class="appt-time" data-en="Today, 3:30 PM · General Medicine" data-hi="आज, 3:30 बजे · सामान्य चिकित्सा">Today, 3:30 PM · General Medicine</div>
+        </div>
+        <span class="appt-badge badge-green" data-en="Video" data-hi="वीडियो">Video</span>
+      </div>
+      <div class="appointment-item">
+        <div class="appt-dot" style="background:var(--amber-200);"></div>
+        <div class="appt-info">
+          <div class="appt-name">Dr. Vikram Singh</div>
+          <div class="appt-time" data-en="Mar 16, 11:00 AM · Cardiology" data-hi="16 मार्च, 11:00 बजे · हृदयरोग">Mar 16, 11:00 AM · Cardiology</div>
+        </div>
+        <span class="appt-badge badge-amber" data-en="Chat" data-hi="चैट">Chat</span>
+      </div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-title" data-en="Health Summary" data-hi="स्वास्थ्य सारांश">Health Summary</div>
+      <div style="font-size:12px;color:var(--gray-600);margin-bottom:6px;" data-en="Last visit: Mar 10" data-hi="आखिरी दौरा: 10 मार्च">Last visit: Mar 10</div>
+      <span class="tag" data-en="BP: Normal" data-hi="BP: सामान्य">BP: Normal</span>
+      <span class="tag" data-en="Sugar: Check" data-hi="शुगर: जाँच">Sugar: Check</span>
+      <span class="tag" data-en="Weight: 68kg" data-hi="वजन: 68kg">Weight: 68kg</span>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-title" data-en="Recent Rx" data-hi="हाल का नुस्खा">Recent Rx</div>
+      <div style="font-size:12px;color:var(--gray-600);line-height:1.6;" data-en="Paracetamol 500mg<br>Metformin 500mg<br><span style='color:var(--green-600);font-weight:500;'>2 active medicines</span>" data-hi="पैरासिटामोल 500mg<br>मेटफॉर्मिन 500mg<br><span style='color:var(--green-600);font-weight:500;'>2 सक्रिय दवाएं</span>">Paracetamol 500mg<br>Metformin 500mg<br><span style='color:var(--green-600);font-weight:500;'>2 active medicines</span></div>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="action-btn ab-green" onclick="showScreen('booking')" data-en="+ Book Appointment" data-hi="+ अपॉइंटमेंट">+ Book Appointment</button>
+    <button class="action-btn ab-teal" onclick="showScreen('symptom')" data-en="AI Symptom Check" data-hi="AI जाँच">AI Symptom Check</button>
+    <button class="action-btn ab-outline" onclick="showScreen('prescription')" data-en="My Prescriptions" data-hi="नुस्खे">My Prescriptions</button>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="bnav-btn active" onclick="showScreen('patient-dash')"><span class="bnav-icon">🏠</span><span data-en="Home" data-hi="होम">Home</span></button>
+    <button class="bnav-btn" onclick="showScreen('booking')"><span class="bnav-icon">📅</span><span data-en="Book" data-hi="बुक">Book</span></button>
+    <button class="bnav-btn" onclick="showScreen('video')"><span class="bnav-icon">📹</span><span data-en="Consult" data-hi="परामर्श">Consult</span></button>
+    <button class="bnav-btn" onclick="showScreen('prescription')"><span class="bnav-icon">💊</span><span data-en="Rx" data-hi="नुस्खा">Rx</span></button>
+    <button class="bnav-btn" onclick="showScreen('symptom')"><span class="bnav-icon">🤖</span><span data-en="AI" data-hi="AI">AI</span></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     SCREEN 3: DOCTOR DASHBOARD
+═══════════════════════════════ -->
+<div class="screen" id="screen-doctor-dash">
+  <div class="dash-header" style="background:linear-gradient(90deg,var(--blue-600) 0%,var(--teal-600) 100%);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div style="font-size:12px;opacity:0.75;" data-en="Doctor Panel" data-hi="डॉक्टर पैनल">Doctor Panel</div>
+        <h2>Dr. Priya Sharma</h2>
+        <p data-en="General Medicine · KGMU Lucknow" data-hi="सामान्य चिकित्सा · KGMU लखनऊ">General Medicine · KGMU Lucknow</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.15);border-radius:var(--radius-sm);padding:8px 12px;text-align:center;">
+        <div style="font-size:18px;font-weight:700;">8</div>
+        <div style="font-size:10px;opacity:0.8;" data-en="Today" data-hi="आज">Today</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-card full-width">
+      <div class="dash-card-title" data-en="Today's Queue" data-hi="आज की कतार">Today's Queue</div>
+      <div class="appointment-item">
+        <div class="appt-dot" style="background:var(--coral-400);"></div>
+        <div class="appt-info">
+          <div class="appt-name">Ramesh Kumar</div>
+          <div class="appt-time" data-en="3:30 PM · Fever, Cough · Symptoms submitted" data-hi="3:30 बजे · बुखार, खांसी · लक्षण जमा">3:30 PM · Fever, Cough · Symptoms submitted</div>
+        </div>
+        <span class="appt-badge badge-red" data-en="Now" data-hi="अभी">Now</span>
+      </div>
+      <div class="appointment-item">
+        <div class="appt-dot"></div>
+        <div class="appt-info">
+          <div class="appt-name">Sunita Devi</div>
+          <div class="appt-time" data-en="4:00 PM · Diabetes follow-up" data-hi="4:00 बजे · मधुमेह अनुवर्ती">4:00 PM · Diabetes follow-up</div>
+        </div>
+        <span class="appt-badge badge-green" data-en="Next" data-hi="अगला">Next</span>
+      </div>
+      <div class="appointment-item">
+        <div class="appt-dot" style="background:var(--gray-400);"></div>
+        <div class="appt-info">
+          <div class="appt-name">Mohan Lal</div>
+          <div class="appt-time" data-en="4:30 PM · Hypertension" data-hi="4:30 बजे · उच्च रक्तचाप">4:30 PM · Hypertension</div>
+        </div>
+        <span class="appt-badge" style="background:var(--gray-50);color:var(--gray-600);" data-en="Waiting" data-hi="प्रतीक्षा">Waiting</span>
+      </div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-title" data-en="This Week" data-hi="इस सप्ताह">This Week</div>
+      <div style="font-size:24px;font-weight:700;color:var(--blue-600);">42</div>
+      <div style="font-size:11px;color:var(--gray-600);" data-en="Patients seen" data-hi="मरीज देखे">Patients seen</div>
+      <span class="tag" style="margin-top:8px;display:inline-block;" data-en="↑ 18% vs last week" data-hi="↑ 18% पिछले सप्ताह से">↑ 18% vs last week</span>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-title" data-en="Villages Covered" data-hi="कवर किए गाँव">Villages Covered</div>
+      <div style="font-size:24px;font-weight:700;color:var(--teal-600);">23</div>
+      <div style="font-size:11px;color:var(--gray-600);" data-en="Across Sultanpur" data-hi="सुल्तानपुर में">Across Sultanpur</div>
+      <span class="tag" style="background:var(--teal-50);color:var(--teal-600);margin-top:8px;display:inline-block;" data-en="Uttar Pradesh" data-hi="उत्तर प्रदेश">Uttar Pradesh</span>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="action-btn ab-blue" onclick="showScreen('video')" data-en="Start Consultation" data-hi="परामर्श शुरू करें">Start Consultation</button>
+    <button class="action-btn ab-green" onclick="showScreen('prescription')" data-en="Write Prescription" data-hi="नुस्खा लिखें">Write Prescription</button>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="bnav-btn active"><span class="bnav-icon">🏠</span><span data-en="Home" data-hi="होम">Home</span></button>
+    <button class="bnav-btn" onclick="showScreen('video')"><span class="bnav-icon">📹</span><span data-en="Consult" data-hi="परामर्श">Consult</span></button>
+    <button class="bnav-btn" onclick="showScreen('prescription')"><span class="bnav-icon">💊</span><span data-en="Prescribe" data-hi="नुस्खा">Prescribe</span></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     SCREEN 4: APPOINTMENT BOOKING
+═══════════════════════════════ -->
+<div class="screen" id="screen-booking">
+  <button class="back-btn" onclick="goBack()">← <span data-en="Back" data-hi="वापस">Back</span></button>
+  <div style="padding:0 16px 8px;">
+    <div class="section-title" data-en="Book Appointment" data-hi="अपॉइंटमेंट बुक करें">Book Appointment</div>
+    <div class="section-sub" data-en="Select a doctor and time slot" data-hi="डॉक्टर और समय चुनें">Select a doctor and time slot</div>
+  </div>
+
+  <div class="booking-section">
+    <div class="booking-card">
+      <div class="dash-card-title" data-en="Choose Specialist" data-hi="विशेषज्ञ चुनें">Choose Specialist</div>
+      <div class="form-field">
+        <select class="form-select">
+          <option data-en="All Specialties" data-hi="सभी विशेषज्ञता">All Specialties</option>
+          <option data-en="General Medicine" data-hi="सामान्य चिकित्सा">General Medicine</option>
+          <option data-en="Cardiology" data-hi="हृदयरोग">Cardiology</option>
+          <option data-en="Pediatrics" data-hi="बाल रोग">Pediatrics</option>
+          <option data-en="Gynecology" data-hi="स्त्री रोग">Gynecology</option>
+        </select>
+      </div>
+      <div class="doctor-item">
+        <div class="doctor-avatar">PS</div>
+        <div class="doctor-info">
+          <div class="doctor-name">Dr. Priya Sharma</div>
+          <div class="doctor-spec" data-en="General Medicine · KGMU, Lucknow" data-hi="सामान्य चिकित्सा · KGMU, लखनऊ">General Medicine · KGMU, Lucknow</div>
+          <div class="doctor-avail" data-en="Available today" data-hi="आज उपलब्ध">Available today</div>
+        </div>
+        <div class="doctor-fee">₹150</div>
+      </div>
+      <div class="doctor-item">
+        <div class="doctor-avatar" style="background:var(--blue-50);color:var(--blue-600);">VS</div>
+        <div class="doctor-info">
+          <div class="doctor-name">Dr. Vikram Singh</div>
+          <div class="doctor-spec" data-en="Cardiology · BHU, Varanasi" data-hi="हृदयरोग · BHU, वाराणसी">Cardiology · BHU, Varanasi</div>
+          <div class="doctor-avail" data-en="Next slot: Mar 16" data-hi="अगला स्लॉट: 16 मार्च">Next slot: Mar 16</div>
+        </div>
+        <div class="doctor-fee">₹200</div>
+      </div>
+      <div class="doctor-item">
+        <div class="doctor-avatar" style="background:var(--amber-50);color:var(--amber-400);">RG</div>
+        <div class="doctor-info">
+          <div class="doctor-name">Dr. Rekha Gupta</div>
+          <div class="doctor-spec" data-en="Pediatrics · SGPGI, Lucknow" data-hi="बाल रोग · SGPGI, लखनऊ">Pediatrics · SGPGI, Lucknow</div>
+          <div class="doctor-avail" data-en="Available tomorrow" data-hi="कल उपलब्ध">Available tomorrow</div>
+        </div>
+        <div class="doctor-fee">₹150</div>
+      </div>
+    </div>
+
+    <div class="booking-card">
+      <div class="dash-card-title" data-en="Select Time Slot — Today, Mar 14" data-hi="समय स्लॉट चुनें — आज, 14 मार्च">Select Time Slot — Today, Mar 14</div>
+      <div class="slot-grid" id="slot-grid">
+        <div class="slot unavail">9:00 AM</div>
+        <div class="slot unavail">10:00 AM</div>
+        <div class="slot">11:00 AM</div>
+        <div class="slot">11:30 AM</div>
+        <div class="slot selected">3:30 PM</div>
+        <div class="slot">4:00 PM</div>
+        <div class="slot">4:30 PM</div>
+        <div class="slot unavail">5:00 PM</div>
+        <div class="slot">5:30 PM</div>
+      </div>
+    </div>
+
+    <div class="booking-card">
+      <div class="dash-card-title" data-en="Patient Details" data-hi="मरीज विवरण">Patient Details</div>
+      <div class="form-field">
+        <label class="form-label" data-en="Full Name / पूरा नाम" data-hi="पूरा नाम">Full Name / पूरा नाम</label>
+        <input class="form-input" type="text" placeholder="Ramesh Kumar" value="Ramesh Kumar">
+      </div>
+      <div class="form-field">
+        <label class="form-label" data-en="Village / गाँव" data-hi="गाँव">Village / गाँव</label>
+        <input class="form-input" type="text" value="Rampur, Sultanpur">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="form-field">
+          <label class="form-label" data-en="Age / आयु" data-hi="आयु">Age</label>
+          <input class="form-input" type="text" value="42">
+        </div>
+        <div class="form-field">
+          <label class="form-label" data-en="Consultation Type" data-hi="परामर्श प्रकार">Type</label>
+          <select class="form-select"><option>Video Call</option><option>Chat</option></select>
+        </div>
+      </div>
+      <button class="action-btn ab-green" style="width:100%;margin-top:4px;" onclick="showScreen('booking-confirm')" data-en="Confirm Appointment →" data-hi="अपॉइंटमेंट पक्का करें →">Confirm Appointment →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     SCREEN 4b: BOOKING CONFIRM
+═══════════════════════════════ -->
+<div class="screen" id="screen-booking-confirm">
+  <div class="success-screen">
+    <div class="success-icon">✅</div>
+    <div class="success-title" data-en="Appointment Confirmed!" data-hi="अपॉइंटमेंट पक्की हो गई!">Appointment Confirmed!</div>
+    <div class="success-sub" data-en="Your appointment has been booked successfully." data-hi="आपकी अपॉइंटमेंट सफलतापूर्वक बुक हो गई।">Your appointment has been booked successfully.</div>
+    <div style="background:#fff;border-radius:var(--radius);border:1px solid #e5eed8;padding:16px;margin:0 0 20px;text-align:left;">
+      <div class="appointment-item" style="border:none;padding:0;margin-bottom:10px;">
+        <div class="doctor-avatar">PS</div>
+        <div>
+          <div class="doctor-name">Dr. Priya Sharma</div>
+          <div class="doctor-spec" data-en="General Medicine" data-hi="सामान्य चिकित्सा">General Medicine</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:13px;margin-top:10px;line-height:1.9;color:var(--gray-600);">
+        <div>📅 <span data-en="Today, March 14 · 3:30 PM" data-hi="आज, 14 मार्च · 3:30 बजे">Today, March 14 · 3:30 PM</span></div>
+        <div>📹 <span data-en="Video Consultation" data-hi="वीडियो परामर्श">Video Consultation</span></div>
+        <div>💰 ₹150 (<span data-en="Pay at clinic" data-hi="क्लिनिक पर भुगतान">Pay at clinic</span>)</div>
+        <div>🔗 <span style="color:var(--green-600);font-weight:500;" data-en="Link sent to your number" data-hi="आपके नंबर पर लिंक भेजा गया">Link sent to your number</span></div>
+      </div>
+    </div>
+    <button class="action-btn ab-teal" style="width:100%;margin-bottom:10px;" onclick="showScreen('symptom')" data-en="Fill AI Symptom Form →" data-hi="AI लक्षण फॉर्म भरें →">Fill AI Symptom Form →</button>
+    <button class="action-btn ab-outline" style="width:100%;" onclick="showScreen('patient-dash')" data-en="Go to Dashboard" data-hi="डैशबोर्ड पर जाएं">Go to Dashboard</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     SCREEN 5: AI SYMPTOM CHECK
+═══════════════════════════════ -->
+<div class="screen" id="screen-symptom">
+  <button class="back-btn" onclick="goBack()">← <span data-en="Back" data-hi="वापस">Back</span></button>
+  <div style="padding:0 16px 8px;">
+    <div class="section-title" data-en="AI Symptom Check" data-hi="AI लक्षण जांच">AI Symptom Check</div>
+    <div class="section-sub" data-en="Answer a few questions to help your doctor" data-hi="डॉक्टर की मदद के लिए कुछ सवालों के जवाब दें">Answer a few questions to help your doctor</div>
+  </div>
+
+  <div class="symptom-progress">
+    <div class="step-dot done" id="sdot-1"></div>
+    <div class="step-dot active" id="sdot-2"></div>
+    <div class="step-dot" id="sdot-3"></div>
+    <div class="step-dot" id="sdot-4"></div>
+    <div class="step-dot" id="sdot-5"></div>
+  </div>
+
+  <div id="symptom-q1">
+    <div class="question-card">
+      <div class="q-number" data-en="Question 1 of 5" data-hi="प्रश्न 1 / 5">Question 1 of 5</div>
+      <div class="q-text" data-en="What is your main health concern today?" data-hi="आज आपकी मुख्य स्वास्थ्य समस्या क्या है?">What is your main health concern today?</div>
+      <div class="q-hindi">आज आपकी मुख्य समस्या क्या है?</div>
+      <button class="option-btn" onclick="nextSymptomQ(1)" data-en="Fever / बुखार" data-hi="बुखार / Fever">Fever / बुखार</button>
+      <button class="option-btn" onclick="nextSymptomQ(1)" data-en="Cough / खांसी" data-hi="खांसी / Cough">Cough / खांसी</button>
+      <button class="option-btn" onclick="nextSymptomQ(1)" data-en="Stomach pain / पेट दर्द" data-hi="पेट दर्द / Stomach pain">Stomach pain / पेट दर्द</button>
+      <button class="option-btn" onclick="nextSymptomQ(1)" data-en="Headache / सिरदर्द" data-hi="सिरदर्द / Headache">Headache / सिरदर्द</button>
+    </div>
+  </div>
+  <div id="symptom-q2" style="display:none;">
+    <div class="question-card">
+      <div class="q-number" data-en="Question 2 of 5" data-hi="प्रश्न 2 / 5">Question 2 of 5</div>
+      <div class="q-text" data-en="How long have you had this symptom?" data-hi="यह लक्षण कितने समय से है?">How long have you had this symptom?</div>
+      <div class="q-hindi">यह तकलीफ कितने दिनों से है?</div>
+      <button class="option-btn" onclick="nextSymptomQ(2)" data-en="Less than 1 day / 1 दिन से कम" data-hi="1 दिन से कम">Less than 1 day / 1 दिन से कम</button>
+      <button class="option-btn" onclick="nextSymptomQ(2)" data-en="1–3 days / 1-3 दिन" data-hi="1-3 दिन">1–3 days / 1-3 दिन</button>
+      <button class="option-btn" onclick="nextSymptomQ(2)" data-en="4–7 days / 4-7 दिन" data-hi="4-7 दिन">4–7 days / 4-7 दिन</button>
+      <button class="option-btn" onclick="nextSymptomQ(2)" data-en="More than a week / एक हफ्ते से ज्यादा" data-hi="एक हफ्ते से ज्यादा">More than a week / एक हफ्ते से ज्यादा</button>
+    </div>
+  </div>
+  <div id="symptom-q3" style="display:none;">
+    <div class="question-card">
+      <div class="q-number" data-en="Question 3 of 5" data-hi="प्रश्न 3 / 5">Question 3 of 5</div>
+      <div class="q-text" data-en="How severe is your discomfort?" data-hi="आपकी तकलीफ कितनी गंभीर है?">How severe is your discomfort?</div>
+      <div class="q-hindi">दर्द या तकलीफ कितनी है?</div>
+      <button class="option-btn" onclick="nextSymptomQ(3)">😊 <span data-en="Mild — I can manage" data-hi="हल्की — संभाल सकता हूँ">Mild — I can manage</span></button>
+      <button class="option-btn" onclick="nextSymptomQ(3)">😐 <span data-en="Moderate — affecting daily activities" data-hi="मध्यम — दैनिक कामों में बाधा">Moderate — affecting daily activities</span></button>
+      <button class="option-btn" onclick="nextSymptomQ(3)">😣 <span data-en="Severe — need help immediately" data-hi="गंभीर — तत्काल मदद चाहिए">Severe — need help immediately</span></button>
+    </div>
+  </div>
+  <div id="symptom-q4" style="display:none;">
+    <div class="question-card">
+      <div class="q-number" data-en="Question 4 of 5" data-hi="प्रश्न 4 / 5">Question 4 of 5</div>
+      <div class="q-text" data-en="Do you have any of these additional symptoms?" data-hi="क्या आपको इनमें से कोई और लक्षण हैं?">Do you have any of these additional symptoms?</div>
+      <div class="q-hindi">और कोई लक्षण?</div>
+      <button class="option-btn" onclick="nextSymptomQ(4)" data-en="Breathlessness / सांस लेने में दिक्कत" data-hi="सांस लेने में दिक्कत">Breathlessness / सांस लेने में दिक्कत</button>
+      <button class="option-btn" onclick="nextSymptomQ(4)" data-en="Vomiting / उल्टी" data-hi="उल्टी">Vomiting / उल्टी</button>
+      <button class="option-btn" onclick="nextSymptomQ(4)" data-en="Weakness / कमजोरी" data-hi="कमजोरी">Weakness / कमजोरी</button>
+      <button class="option-btn" onclick="nextSymptomQ(4)" data-en="None of the above / इनमें से कोई नहीं" data-hi="इनमें से कोई नहीं">None of the above</button>
+    </div>
+  </div>
+  <div id="symptom-q5" style="display:none;">
+    <div class="question-card">
+      <div class="q-number" data-en="Question 5 of 5" data-hi="प्रश्न 5 / 5">Question 5 of 5</div>
+      <div class="q-text" data-en="Do you have any known medical conditions?" data-hi="क्या आपको कोई पहले से बीमारी है?">Do you have any known medical conditions?</div>
+      <div class="q-hindi">पुरानी कोई बीमारी?</div>
+      <button class="option-btn" onclick="showAIResult()" data-en="Diabetes / मधुमेह" data-hi="मधुमेह">Diabetes / मधुमेह</button>
+      <button class="option-btn" onclick="showAIResult()" data-en="Hypertension / उच्च रक्तचाप" data-hi="उच्च रक्तचाप">Hypertension / उच्च रक्तचाप</button>
+      <button class="option-btn" onclick="showAIResult()" data-en="Asthma / दमा" data-hi="दमा">Asthma / दमा</button>
+      <button class="option-btn" onclick="showAIResult()" data-en="No known conditions / कोई नहीं" data-hi="कोई नहीं">No known conditions</button>
+    </div>
+  </div>
+  <div id="symptom-result" style="display:none;">
+    <div class="ai-thinking" id="ai-thinking">
+      <div class="thinking-dots"><span></span><span></span><span></span></div>
+      <span style="font-size:12px;color:var(--teal-800);" data-en="AI is analyzing your symptoms..." data-hi="AI आपके लक्षणों का विश्लेषण कर रहा है...">AI is analyzing your symptoms...</span>
+    </div>
+    <div id="ai-final" style="display:none;">
+      <div class="question-card" style="border-color:var(--teal-200);">
+        <div style="font-size:11px;font-weight:600;color:var(--teal-600);margin-bottom:8px;" data-en="AI Assessment Complete ✓" data-hi="AI आकलन पूर्ण ✓">AI Assessment Complete ✓</div>
+        <div style="font-size:14px;font-weight:500;margin-bottom:8px;" data-en="Likely: Viral Fever with Respiratory Symptoms" data-hi="संभावित: वायरल बुखार श्वसन लक्षणों के साथ">Likely: Viral Fever with Respiratory Symptoms</div>
+        <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px;line-height:1.6;" data-en="Based on your responses, the doctor has been notified. This is not a diagnosis — your doctor will advise you during consultation." data-hi="आपके जवाबों के आधार पर डॉक्टर को सूचित किया गया है। यह निदान नहीं है।">Based on your responses, the doctor has been notified. This is not a diagnosis — your doctor will advise you during consultation.</div>
+        <span class="tag" style="background:var(--amber-50);color:var(--amber-400);" data-en="⚠ Moderate Priority" data-hi="⚠ मध्यम प्राथमिकता">⚠ Moderate Priority</span>
+        <span class="tag" data-en="Sent to Dr. Priya Sharma" data-hi="डॉ. प्रिया शर्मा को भेजा गया">Sent to Dr. Priya Sharma</span>
+      </div>
+      <div class="action-row">
+        <button class="action-btn ab-green" onclick="showScreen('video')" data-en="Join Video Consultation →" data-hi="वीडियो परामर्श में शामिल हों →">Join Video Consultation →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     SCREEN 6: VIDEO CONSULTATION
+═══════════════════════════════ -->
+<div class="screen" id="screen-video">
+  <div style="background:linear-gradient(90deg,var(--blue-600),var(--teal-600));color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div style="font-size:13px;font-weight:600;" data-en="Video Consultation" data-hi="वीडियो परामर्श">Video Consultation</div>
+      <div style="font-size:11px;opacity:0.8;" data-en="Dr. Priya Sharma · General Medicine" data-hi="डॉ. प्रिया शर्मा · सामान्य चिकित्सा">Dr. Priya Sharma · General Medicine</div>
+    </div>
+    <span style="background:rgba(255,255,255,0.2);border-radius:12px;padding:3px 10px;font-size:11px;">● LIVE</span>
+  </div>
+
+  <div class="video-area">
+    <div class="video-main">
+      <div class="video-avatar">PS</div>
+      <div class="video-name">Dr. Priya Sharma</div>
+      <div class="video-status" data-en="Connected · Good signal" data-hi="कनेक्टेड · अच्छा सिग्नल">Connected · Good signal</div>
+    </div>
+    <div class="video-self">
+      <div class="video-self-text" data-en="You" data-hi="आप">You</div>
+    </div>
+  </div>
+
+  <div class="video-controls">
+    <button class="vc-btn vc-gray" title="Mute/Unmute">🎤</button>
+    <button class="vc-btn vc-gray" title="Camera On/Off">📷</button>
+    <button class="vc-btn vc-red" onclick="showScreen('prescription')" title="End Call" style="width:52px;height:52px;font-size:18px;">📵</button>
+    <button class="vc-btn vc-gray" title="Speaker">🔊</button>
+    <button class="vc-btn vc-gray" title="Chat">💬</button>
+  </div>
+
+  <div class="info-box">
+    <p data-en="Symptoms shared: Fever (3 days), Cough, Weakness · Dr. Sharma has reviewed your AI symptom report before the call." data-hi="साझा लक्षण: बुखार (3 दिन), खांसी, कमजोरी · डॉ. शर्मा ने कॉल से पहले AI रिपोर्ट देखी है।">Symptoms shared: Fever (3 days), Cough, Weakness · Dr. Sharma has reviewed your AI symptom report before the call.</p>
+  </div>
+
+  <div class="chat-area">
+    <div class="chat-messages" id="chat-msgs">
+      <div class="chat-msg">
+        <div class="msg-sender">Dr. Priya Sharma</div>
+        <div class="msg-text" data-en="Namaste Ramesh ji, I can see your symptoms. How are you feeling right now?" data-hi="नमस्ते रमेश जी, मैं आपके लक्षण देख सकती हूँ। अभी कैसा महसूस हो रहा है?">Namaste Ramesh ji, I can see your symptoms. How are you feeling right now?</div>
+      </div>
+      <div class="chat-msg" style="text-align:right;">
+        <div class="msg-sender" style="color:var(--teal-600);" data-en="You" data-hi="आप">You</div>
+        <div class="msg-text own" data-en="Namaste Doctor, fever is 102°F since morning." data-hi="नमस्ते डॉक्टर, सुबह से 102°F बुखार है।">Namaste Doctor, fever is 102°F since morning.</div>
+      </div>
+      <div class="chat-msg">
+        <div class="msg-sender">Dr. Priya Sharma</div>
+        <div class="msg-text" data-en="I understand. I am writing a prescription for you now. Please rest well and drink lots of fluids." data-hi="समझ गई। मैं अभी आपके लिए नुस्खा लिख रही हूँ। अच्छे से आराम करें और खूब पानी पिएं।">I understand. I am writing a prescription for you now. Please rest well and drink lots of fluids.</div>
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" type="text" id="chat-inp" placeholder="Type a message / संदेश टाइप करें">
+      <button class="action-btn ab-green" style="flex:0 0 auto;padding:7px 14px;" onclick="sendChat()" data-en="Send" data-hi="भेजें">Send</button>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="action-btn ab-green" onclick="showScreen('prescription')" data-en="View Prescription →" data-hi="नुस्खा देखें →">View Prescription →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     SCREEN 7: DIGITAL PRESCRIPTION
+═══════════════════════════════ -->
+<div class="screen" id="screen-prescription">
+  <button class="back-btn" onclick="goBack()">← <span data-en="Back" data-hi="वापस">Back</span></button>
+  <div class="rx-card">
+    <div class="rx-header">
+      <div>
+        <div class="rx-clinic">CareConnect Health Clinic</div>
+        <div class="rx-clinic-sub">केयरकनेक्ट डिजिटल क्लिनिक</div>
+        <div style="font-size:11px;opacity:0.8;margin-top:4px;" data-en="Digital Health & Teleconsultation Network" data-hi="डिजिटल स्वास्थ्य एवं टेलीपरामर्श नेटवर्क">Digital Health & Teleconsultation Network</div>
+      </div>
+      <div class="rx-date">
+        <div data-en="Date: 14 Mar 2026" data-hi="दिनांक: 14 मार्च 2026">Date: 14 Mar 2026</div>
+        <div style="margin-top:4px;">Rx #CCN-20260314-042</div>
+      </div>
+    </div>
+    <div class="rx-patient">
+      <div class="rx-field"><div class="rx-field-label" data-en="Patient" data-hi="मरीज">Patient</div><div class="rx-field-val">Ramesh Kumar</div></div>
+      <div class="rx-field"><div class="rx-field-label" data-en="Age / Sex" data-hi="आयु / लिंग">Age / Sex</div><div class="rx-field-val">42 / Male</div></div>
+      <div class="rx-field"><div class="rx-field-label" data-en="Village" data-hi="गाँव">Village</div><div class="rx-field-val" data-en="Rampur, Sultanpur" data-hi="रामपुर, सुल्तानपुर">Rampur, Sultanpur</div></div>
+      <div class="rx-field"><div class="rx-field-label" data-en="Doctor" data-hi="डॉक्टर">Doctor</div><div class="rx-field-val">Dr. Priya Sharma</div></div>
+    </div>
+    <div class="rx-symbol">℞</div>
+    <div class="rx-medicine">
+      <div class="rx-med-num">1</div>
+      <div>
+        <div class="rx-med-name">Paracetamol 500mg</div>
+        <div class="rx-med-dose" data-en="1 tablet every 6 hours for 3 days · After food" data-hi="हर 6 घंटे में 1 गोली, 3 दिन तक · खाने के बाद">1 tablet every 6 hours for 3 days · After food</div>
+      </div>
+    </div>
+    <div class="rx-medicine">
+      <div class="rx-med-num">2</div>
+      <div>
+        <div class="rx-med-name">Cetirizine 10mg</div>
+        <div class="rx-med-dose" data-en="1 tablet at bedtime for 5 days" data-hi="रात को सोने से पहले 1 गोली, 5 दिन तक">1 tablet at bedtime for 5 days</div>
+      </div>
+    </div>
+    <div class="rx-medicine">
+      <div class="rx-med-num">3</div>
+      <div>
+        <div class="rx-med-name">ORS Sachets</div>
+        <div class="rx-med-dose" data-en="1 sachet in 1L water, 2–3 times daily" data-hi="1 लीटर पानी में 1 सैशे, दिन में 2-3 बार">1 sachet in 1L water, 2–3 times daily</div>
+      </div>
+    </div>
+    <div class="rx-advice">
+      <div class="rx-advice-title" data-en="Doctor's Advice" data-hi="डॉक्टर की सलाह">Doctor's Advice</div>
+      <div class="rx-advice-text" data-en="Rest for 3–4 days. Drink plenty of fluids (ORS, coconut water). Avoid cold foods. If fever crosses 103°F or difficulty breathing, visit nearest PHC immediately." data-hi="3-4 दिन आराम करें। खूब तरल पदार्थ पिएं। अगर बुखार 103°F से ऊपर जाए या सांस लेने में दिक्कत हो तो तुरंत नजदीकी PHC जाएं।">Rest for 3–4 days. Drink plenty of fluids (ORS, coconut water). Avoid cold foods. If fever crosses 103°F or difficulty breathing, visit nearest PHC immediately.</div>
+    </div>
+    <div class="rx-footer">
+      <div style="text-align:right;">
+        <div style="font-size:18px;font-family:cursive;color:var(--green-600);">Dr. Priya Sharma</div>
+        <div class="rx-sign-line" data-en="MBBS, MD · Reg. No. UP-24-7892" data-hi="MBBS, MD · पंजीकरण संख्या UP-24-7892">MBBS, MD · Reg. No. UP-24-7892</div>
+      </div>
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="action-btn ab-green" onclick="alert('Prescription saved! In a real app this would generate a PDF.')" data-en="⬇ Download PDF" data-hi="⬇ PDF डाउनलोड करें">⬇ Download PDF</button>
+    <button class="action-btn ab-outline" onclick="alert('Prescription shared via SMS!')" data-en="📱 Share via SMS" data-hi="📱 SMS से शेयर करें">📱 Share via SMS</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     SCREEN 8: HEALTH WORKER PORTAL
+═══════════════════════════════ -->
+<div class="screen" id="screen-health-worker">
+  <div class="hw-header" style="background:linear-gradient(90deg,var(--amber-400) 0%,var(--coral-400) 100%);">
+    <div style="font-size:12px;opacity:0.8;" data-en="Health Worker Portal" data-hi="स्वास्थ्य कार्यकर्ता पोर्टल">Health Worker Portal</div>
+    <h2 style="font-size:18px;font-weight:600;">Seema Yadav — ASHA</h2>
+    <p style="font-size:12px;opacity:0.8;" data-en="Block: Kadipur · Sultanpur District" data-hi="ब्लॉक: कादीपुर · सुल्तानपुर जिला">Block: Kadipur · Sultanpur District</p>
+  </div>
+
+  <div class="offline-banner">
+    <div class="offline-dot"></div>
+    <div class="offline-text" data-en="Offline Mode Active — Data saved locally, will sync when connected" data-hi="ऑफलाइन मोड चालू — डेटा स्थानीय रूप से सहेजा गया, कनेक्ट होने पर सिंक होगा">Offline Mode Active — Data saved locally, will sync when connected</div>
+  </div>
+
+  <div style="padding:8px 12px 4px;">
+    <div class="dash-card-title" data-en="Registered Patients — 3 pending sync" data-hi="पंजीकृत मरीज — 3 सिंक बाकी">Registered Patients — 3 pending sync</div>
+  </div>
+
+  <div class="patient-list">
+    <div class="patient-row" onclick="showScreen('hw-patient')">
+      <div class="patient-initial">RK</div>
+      <div class="patient-info">
+        <div class="patient-name">Ramesh Kumar</div>
+        <div class="patient-village" data-en="Rampur · Age 42 · M" data-hi="रामपुर · आयु 42 · पुरुष">Rampur · Age 42 · M</div>
+      </div>
+      <span class="patient-status badge-amber" data-en="Not synced" data-hi="सिंक नहीं">Not synced</span>
+    </div>
+    <div class="patient-row" onclick="showScreen('hw-patient')">
+      <div class="patient-initial">SD</div>
+      <div class="patient-info">
+        <div class="patient-name">Sunita Devi</div>
+        <div class="patient-village" data-en="Khajuriyapur · Age 55 · F" data-hi="खजुरियापुर · आयु 55 · महिला">Khajuriyapur · Age 55 · F</div>
+      </div>
+      <span class="patient-status badge-amber" data-en="Not synced" data-hi="सिंक नहीं">Not synced</span>
+    </div>
+    <div class="patient-row">
+      <div class="patient-initial">ML</div>
+      <div class="patient-info">
+        <div class="patient-name">Mohan Lal</div>
+        <div class="patient-village" data-en="Raipur · Age 60 · M" data-hi="रायपुर · आयु 60 · पुरुष">Raipur · Age 60 · M</div>
+      </div>
+      <span class="patient-status badge-green" data-en="Synced" data-hi="सिंक हो गया">Synced</span>
+    </div>
+  </div>
+
+  <div style="padding:8px 12px 0;">
+    <button class="action-btn ab-amber" style="width:100%;" onclick="showScreen('hw-register')" data-en="+ Register New Patient" data-hi="+ नया मरीज दर्ज करें">+ Register New Patient</button>
+  </div>
+
+  <div class="sync-bar">
+    <div class="sync-info" data-en="Last sync: 2 hrs ago · 3 records pending" data-hi="आखिरी सिंक: 2 घंटे पहले · 3 रिकॉर्ड बाकी">Last sync: 2 hrs ago · 3 records pending</div>
+    <button class="sync-btn" onclick="alert('Syncing... 3 records uploaded successfully!')" data-en="Sync Now" data-hi="अभी सिंक करें">Sync Now</button>
+  </div>
+</div>
+
+<!-- SCREEN 8b: HW PATIENT DETAIL -->
+<div class="screen" id="screen-hw-patient">
+  <button class="back-btn" onclick="goBack()">← <span data-en="Back" data-hi="वापस">Back</span></button>
+  <div style="padding:0 16px 8px;">
+    <div class="section-title">Ramesh Kumar</div>
+    <div class="section-sub" data-en="Patient Health Record · Offline Draft" data-hi="मरीज स्वास्थ्य रिकॉर्ड · ऑफलाइन ड्राफ्ट">Patient Health Record · Offline Draft</div>
+  </div>
+  <div class="booking-card" style="margin:0 12px 12px;">
+    <div class="dash-card-title" data-en="Basic Information" data-hi="बुनियादी जानकारी">Basic Information</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;">
+      <div><div class="rx-field-label" data-en="Name" data-hi="नाम">Name</div><div class="rx-field-val">Ramesh Kumar</div></div>
+      <div><div class="rx-field-label" data-en="Age" data-hi="आयु">Age</div><div class="rx-field-val">42</div></div>
+      <div><div class="rx-field-label" data-en="Village" data-hi="गाँव">Village</div><div class="rx-field-val">Rampur</div></div>
+      <div><div class="rx-field-label" data-en="Phone" data-hi="फोन">Phone</div><div class="rx-field-val">98XXXXX012</div></div>
+    </div>
+    <div class="divider" style="margin:12px 0;"></div>
+    <div class="dash-card-title" data-en="Vitals Recorded" data-hi="दर्ज किए गए जीवन संकेत">Vitals Recorded</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px;">
+      <div class="stat-card"><div class="stat-num" style="font-size:16px;">102°F</div><div class="stat-label" data-en="Temp" data-hi="तापमान">Temp</div></div>
+      <div class="stat-card"><div class="stat-num" style="font-size:16px;">130/85</div><div class="stat-label">BP</div></div>
+      <div class="stat-card"><div class="stat-num" style="font-size:16px;">98%</div><div class="stat-label">SpO₂</div></div>
+    </div>
+    <div class="divider" style="margin:12px 0;"></div>
+    <div class="dash-card-title" data-en="Symptoms Noted" data-hi="दर्ज किए गए लक्षण">Symptoms Noted</div>
+    <div style="margin-top:6px;">
+      <span class="tag" data-en="Fever" data-hi="बुखार">Fever</span>
+      <span class="tag" data-en="Cough" data-hi="खांसी">Cough</span>
+      <span class="tag" data-en="Weakness" data-hi="कमजोरी">Weakness</span>
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="action-btn ab-amber" onclick="alert('Patient data saved offline!')" data-en="Save Offline" data-hi="ऑफलाइन सहेजें">Save Offline</button>
+    <button class="action-btn ab-green" onclick="showScreen('booking')" data-en="Book Appointment" data-hi="अपॉइंटमेंट बुक करें">Book Appointment</button>
+  </div>
+</div>
+
+<!-- SCREEN 8c: HW REGISTER NEW PATIENT -->
+<div class="screen" id="screen-hw-register">
+  <button class="back-btn" onclick="goBack()">← <span data-en="Back" data-hi="वापस">Back</span></button>
+  <div style="padding:0 16px 8px;">
+    <div class="section-title" data-en="Register New Patient" data-hi="नया मरीज दर्ज करें">Register New Patient</div>
+    <div class="section-sub" data-en="Offline mode — data will sync later" data-hi="ऑफलाइन मोड — डेटा बाद में सिंक होगा">Offline mode — data will sync later</div>
+  </div>
+  <div class="booking-card" style="margin:0 12px 12px;">
+    <div class="form-field"><label class="form-label" data-en="Full Name / पूरा नाम" data-hi="पूरा नाम">Full Name</label><input class="form-input" placeholder="पूरा नाम / Full Name"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="form-field"><label class="form-label" data-en="Age / आयु" data-hi="आयु">Age</label><input class="form-input" type="number" placeholder="Age"></div>
+      <div class="form-field"><label class="form-label" data-en="Gender / लिंग" data-hi="लिंग">Gender</label>
+        <select class="form-select">
+          <option data-en="Male" data-hi="पुरुष">Male</option>
+          <option data-en="Female" data-hi="महिला">Female</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-field"><label class="form-label" data-en="Village / गाँव" data-hi="गाँव">Village</label><input class="form-input" placeholder="Village name"></div>
+    <div class="form-field"><label class="form-label" data-en="Phone / फोन नंबर" data-hi="फोन नंबर">Phone</label><input class="form-input" type="tel" placeholder="Mobile number"></div>
+    <div class="form-field"><label class="form-label" data-en="Chief Complaint / मुख्य शिकायत" data-hi="मुख्य शिकायत">Chief Complaint</label><input class="form-input" placeholder="Describe symptoms / लक्षण बताएं"></div>
+    <div class="divider" style="margin:12px 0;"></div>
+    <div class="dash-card-title" data-en="Record Vitals (Optional)" data-hi="जीवन संकेत दर्ज करें (वैकल्पिक)">Record Vitals (Optional)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+      <div class="form-field"><label class="form-label">Temp (°F)</label><input class="form-input" placeholder="98.6"></div>
+      <div class="form-field"><label class="form-label">BP (mmHg)</label><input class="form-input" placeholder="120/80"></div>
+      <div class="form-field"><label class="form-label">SpO₂ (%)</label><input class="form-input" placeholder="98"></div>
+      <div class="form-field"><label class="form-label" data-en="Weight (kg)" data-hi="वजन (kg)">Weight (kg)</label><input class="form-input" placeholder="60"></div>
+    </div>
+    <button class="action-btn ab-amber" style="width:100%;margin-top:8px;" onclick="showScreen('hw-register-confirm')" data-en="Save Patient Record →" data-hi="मरीज रिकॉर्ड सहेजें →">Save Patient Record →</button>
+  </div>
+</div>
+
+<!-- SCREEN 8d: HW REGISTER CONFIRM -->
+<div class="screen" id="screen-hw-register-confirm">
+  <div class="success-screen">
+    <div class="success-icon">✅</div>
+    <div class="success-title" data-en="Patient Registered!" data-hi="मरीज दर्ज हो गया!">Patient Registered!</div>
+    <div class="success-sub" data-en="Record saved offline. Will sync when internet is available." data-hi="रिकॉर्ड ऑफलाइन सहेजा गया। इंटरनेट मिलने पर सिंक होगा।">Record saved offline. Will sync when internet is available.</div>
+    <div class="offline-banner" style="margin:0 0 20px;">
+      <div class="offline-dot"></div>
+      <div class="offline-text" data-en="4 records pending sync" data-hi="4 रिकॉर्ड सिंक बाकी">4 records pending sync</div>
+    </div>
+    <button class="action-btn ab-amber" style="width:100%;margin-bottom:10px;" onclick="showScreen('booking')" data-en="Book Appointment for Patient" data-hi="मरीज का अपॉइंटमेंट बुक करें">Book Appointment for Patient</button>
+    <button class="action-btn ab-outline" style="width:100%;" onclick="showScreen('health-worker')" data-en="Back to Health Worker Portal" data-hi="स्वास्थ्य कार्यकर्ता पोर्टल पर वापस जाएं">Back to Health Worker Portal</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════ -->
+<script>
+  var lang = 'en';
+  var prevScreen = 'home';
+  var currentScreen = 'home';
+
+  // ── Screen Navigation ──
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(function(s) {
+      s.classList.remove('active');
+    });
+    var el = document.getElementById('screen-' + id);
+    if (el) {
+      prevScreen = currentScreen;
+      currentScreen = id;
+      el.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+  }
+
+  function goBack() {
+    showScreen(prevScreen);
+  }
+
+  // ── Language Toggle ──
+  function setLang(l) {
+    lang = l;
+    document.getElementById('lang-en').classList.toggle('active', l === 'en');
+    document.getElementById('lang-hi').classList.toggle('active', l === 'hi');
+    document.querySelectorAll('[data-' + l + ']').forEach(function(el) {
+      el.innerHTML = el.getAttribute('data-' + l);
+    });
+  }
+
+  // ── AI Symptom Flow ──
+  function nextSymptomQ(current) {
+    // Mark selected
+    event.target.classList.add('selected');
+    // Update progress dots
+    var dots = document.querySelectorAll('.step-dot');
+    dots[current - 1].classList.remove('active');
+    dots[current - 1].classList.add('done');
+    // Show next question
+    setTimeout(function() {
+      document.getElementById('symptom-q' + current).style.display = 'none';
+      if (current < 5) {
+        dots[current].classList.add('active');
+        document.getElementById('symptom-q' + (current + 1)).style.display = 'block';
+      }
+    }, 200);
+  }
+
+  function showAIResult() {
+    event.target.classList.add('selected');
+    document.querySelectorAll('.step-dot').forEach(function(d) {
+      d.classList.remove('active');
+      d.classList.add('done');
+    });
+    setTimeout(function() {
+      document.getElementById('symptom-q5').style.display = 'none';
+      document.getElementById('symptom-result').style.display = 'block';
+      // Simulate AI thinking for 2 seconds
+      setTimeout(function() {
+        document.getElementById('ai-thinking').style.display = 'none';
+        document.getElementById('ai-final').style.display = 'block';
+      }, 2000);
+    }, 200);
+  }
+
+  // ── Chat in Video Consultation ──
+  function sendChat() {
+    var inp = document.getElementById('chat-inp');
+    var msgs = document.getElementById('chat-msgs');
+    var text = inp.value.trim();
+    if (!text) return;
+
+    var div = document.createElement('div');
+    div.className = 'chat-msg';
+    div.style.textAlign = 'right';
+    div.innerHTML = '<div class="msg-sender" style="color:var(--teal-600);">' +
+      (lang === 'hi' ? 'आप' : 'You') +
+      '</div><div class="msg-text own">' + text + '</div>';
+    msgs.appendChild(div);
+    inp.value = '';
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  // ── Slot Selection ──
+  document.querySelectorAll('.slot').forEach(function(s) {
+    s.addEventListener('click', function() {
+      if (!this.classList.contains('unavail')) {
+        document.querySelectorAll('.slot').forEach(function(x) {
+          x.classList.remove('selected');
+        });
+        this.classList.add('selected');
+      }
+    });
+  });
+
+  // ── Enter to Send Chat ──
+  document.getElementById('chat-inp').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') sendChat();
+  });
+
+  // ════════════════════════════════════════════
+  //  BACKEND API INTEGRATION
+  // ════════════════════════════════════════════
+  var API_BASE = 'http://localhost:8000';
+  var _token = localStorage.getItem('gs_token') || null;
+  var _user  = JSON.parse(localStorage.getItem('gs_user') || 'null');
+  var _symptomAnswers = {};
+  var _currentAppointmentId = null;
+
+  // ── Helpers ──
+  function apiHeaders() {
+    var h = { 'Content-Type': 'application/json' };
+    if (_token) h['Authorization'] = 'Bearer ' + _token;
+    return h;
+  }
+
+  async function apiFetch(path, opts) {
+    opts = opts || {};
+    opts.headers = apiHeaders();
+    try {
+      var res = await fetch(API_BASE + path, opts);
+      var json = await res.json();
+      if (!res.ok) throw new Error(json.detail || 'API error');
+      return json;
+    } catch (e) {
+      console.error('API error:', e.message);
+      throw e;
+    }
+  }
+
+  function saveSession(token, user) {
+    _token = token;
+    _user  = user;
+    localStorage.setItem('gs_token', token);
+    localStorage.setItem('gs_user', JSON.stringify(user));
+  }
+
+  function clearSession() {
+    _token = null; _user = null;
+    localStorage.removeItem('gs_token');
+    localStorage.removeItem('gs_user');
+  }
+
+  function showToast(msg, color) {
+    var t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);' +
+      'background:' + (color || '#3B6D11') + ';color:#fff;padding:10px 20px;border-radius:20px;' +
+      'font-size:13px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function() { t.remove(); }, 3000);
+  }
+
+  // ── Load platform stats on home screen ──
+  async function loadStats() {
+    try {
+      var data = await apiFetch('/stats/');
+      var nums = document.querySelectorAll('.stat-num');
+      if (nums[0]) nums[0].textContent = data.consultations.toLocaleString();
+      if (nums[1]) nums[1].textContent = data.doctors;
+      if (nums[2]) nums[2].textContent = data.villages;
+    } catch(e) { /* keep static values if API unavailable */ }
+  }
+  loadStats();
+
+  // ── AUTH: Login / Register modal ──
+  var _modalMode = 'login'; // 'login' or 'register'
+
+  function showLoginModal(role) {
+    var existing = document.getElementById('gs-modal');
+    if (existing) existing.remove();
+    _modalMode = 'login';
+
+    var modal = document.createElement('div');
+    modal.id = 'gs-modal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;' +
+      'display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML =
+      '<div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:360px;box-shadow: 0 20px 40px rgba(15,23,42,0.15);border: 1px solid #e2e8f0;">' +
+        '<div style="font-size:17px;font-weight:800;color:#0f172a;margin-bottom:4px;" id="modal-title">CareConnect Sign In</div>' +
+        '<div style="font-size:12px;color:#888;margin-bottom:16px;">Role: <b>' + role + '</b></div>' +
+        '<div class="form-field" id="modal-name-field" style="display:none;">' +
+          '<label class="form-label">Full Name</label>' +
+          '<input class="form-input" id="modal-name" placeholder="Your full name">' +
+        '</div>' +
+        '<div class="form-field">' +
+          '<label class="form-label">Phone Number</label>' +
+          '<input class="form-input" id="modal-phone" type="tel" placeholder="10-digit mobile number">' +
+        '</div>' +
+        '<div class="form-field">' +
+          '<label class="form-label">Password</label>' +
+          '<input class="form-input" id="modal-pass" type="password" placeholder="Password">' +
+        '</div>' +
+        '<div style="display:flex;gap:8px;margin-top:8px;">' +
+          '<button class="action-btn ab-green" style="flex:1;" id="modal-submit-btn" onclick="doSubmit(\'' + role + '\')">Login</button>' +
+          '<button class="action-btn ab-outline" style="flex:1;" id="modal-toggle-btn" onclick="toggleModalMode()">New? Register</button>' +
+        '</div>' +
+        '<button onclick="continueAsGuest(\'' + role + '\')" ' +
+          'style="width:100%;margin-top:10px;background:none;border:none;color:#888;font-size:12px;cursor:pointer;">' +
+          'Cancel — continue as guest (Demo)' +
+        '</button>' +
+      '</div>';
+    document.body.appendChild(modal);
+  }
+
+  function continueAsGuest(role) {
+    var modal = document.getElementById('gs-modal');
+    if (modal) modal.remove();
+    var guestProfiles = {
+      patient: { name: 'Ramesh Kumar', role: 'patient', phone: '9876543210', village: 'Rampur' },
+      doctor: { name: 'Dr. Priya Sharma', role: 'doctor', phone: '9000000001', specialization: 'General Medicine', hospital: 'KGMU, Lucknow' },
+      health_worker: { name: 'Seema Yadav', role: 'health_worker', phone: '8000000001', village: 'Kadipur' }
+    };
+    saveSession('guest_demo_token', guestProfiles[role] || { name: 'Demo User', role: role });
+    showToast('Entered as demo ' + role);
+    if (role === 'patient') { loadPatientDash(); showScreen('patient-dash'); }
+    else if (role === 'doctor') { loadDoctorDash(); showScreen('doctor-dash'); }
+    else { showScreen('health-worker'); }
+  }
+
+  function toggleModalMode() {
+    _modalMode = _modalMode === 'login' ? 'register' : 'login';
+    var nameField = document.getElementById('modal-name-field');
+    var title = document.getElementById('modal-title');
+    var submitBtn = document.getElementById('modal-submit-btn');
+    var toggleBtn = document.getElementById('modal-toggle-btn');
+    if (_modalMode === 'register') {
+      nameField.style.display = 'block';
+      title.textContent = 'Register';
+      submitBtn.textContent = 'Register & Login';
+      toggleBtn.textContent = 'Have account? Login';
+    } else {
+      nameField.style.display = 'none';
+      title.textContent = 'Sign In';
+      submitBtn.textContent = 'Login';
+      toggleBtn.textContent = 'New? Register';
+    }
+  }
+
+  async function doSubmit(role) {
+    var phone = document.getElementById('modal-phone').value.trim();
+    var pass  = document.getElementById('modal-pass').value.trim();
+    if (!phone || !pass) { showToast('Enter phone and password', '#c0392b'); return; }
+
+    try {
+      if (_modalMode === 'register') {
+        var name = document.getElementById('modal-name').value.trim();
+        if (!name) { showToast('Enter your full name', '#c0392b'); return; }
+        await apiFetch('/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({ name: name, phone: phone, password: pass, role: role })
+        });
+        showToast('Registered! Logging in...');
+      }
+      var data = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ phone: phone, password: pass, role: role })
+      });
+      saveSession(data.access_token, data.user);
+      document.getElementById('gs-modal').remove();
+      showToast('Welcome, ' + data.user.name + '!');
+
+      if (role === 'patient') { loadPatientDash(); showScreen('patient-dash'); }
+      else if (role === 'doctor') { loadDoctorDash(); showScreen('doctor-dash'); }
+      else { showScreen('health-worker'); }
+    } catch(e) {
+      showToast(e.message, '#c0392b');
+    }
+  }
+
+  // ── Override role entry buttons to require login ──
+  document.querySelector('[onclick="showScreen(\'patient-dash\')"]').onclick = function() {
+    if (_user && _user.role === 'patient') { loadPatientDash(); showScreen('patient-dash'); }
+    else showLoginModal('patient');
+  };
+  document.querySelector('[onclick="showScreen(\'doctor-dash\')"]').onclick = function() {
+    if (_user && _user.role === 'doctor') { loadDoctorDash(); showScreen('doctor-dash'); }
+    else showLoginModal('doctor');
+  };
+  document.querySelector('[onclick="showScreen(\'health-worker\')"]').onclick = function() {
+    if (_user && _user.role === 'health_worker') showScreen('health-worker');
+    else showLoginModal('health_worker');
+  };
+
+  // ── Patient Dashboard ──
+  async function loadPatientDash() {
+    if (!_user) return;
+    // Update name
+    var h2 = document.querySelector('#screen-patient-dash h2');
+    if (h2) h2.textContent = _user.name + ' 👋';
+
+    try {
+      var appts = await apiFetch('/appointments/my');
+      var upcoming = appts.filter(function(a) { return a.status === 'scheduled'; });
+      var container = document.querySelector('#screen-patient-dash .dash-card.full-width');
+      if (container && upcoming.length > 0) {
+        var title = container.querySelector('.dash-card-title').outerHTML;
+        var items = upcoming.slice(0, 3).map(function(a) {
+          return '<div class="appointment-item">' +
+            '<div class="appt-dot"></div>' +
+            '<div class="appt-info">' +
+              '<div class="appt-name">' + a.doctor_name + '</div>' +
+              '<div class="appt-time">' + a.slot_date + ', ' + a.slot_time + ' · ' + a.doctor_specialization + '</div>' +
+            '</div>' +
+            '<span class="appt-badge badge-green">' + a.consult_type + '</span>' +
+          '</div>';
+        }).join('');
+        container.innerHTML = title + items;
+      }
+    } catch(e) { /* keep static */ }
+  }
+
+  // ── Doctor Dashboard ──
+  async function loadDoctorDash() {
+    if (!_user) return;
+    var h2 = document.querySelector('#screen-doctor-dash h2');
+    if (h2) h2.textContent = _user.name;
+
+    try {
+      var queue = await apiFetch('/appointments/doctor/queue');
+      var container = document.querySelector('#screen-doctor-dash .dash-card.full-width');
+      if (container && queue.length > 0) {
+        var title = container.querySelector('.dash-card-title').outerHTML;
+        var items = queue.map(function(a, i) {
+          var badge = i === 0 ? 'badge-red">Now' : (i === 1 ? 'badge-green">Next' : '" style="background:var(--gray-50);color:var(--gray-600);">Waiting');
+          return '<div class="appointment-item">' +
+            '<div class="appt-dot"></div>' +
+            '<div class="appt-info">' +
+              '<div class="appt-name">' + a.patient_name + '</div>' +
+              '<div class="appt-time">' + a.slot_time + ' · ' + a.patient_village + '</div>' +
+            '</div>' +
+            '<span class="appt-badge ' + badge + '</span>' +
+          '</div>';
+        }).join('');
+        container.innerHTML = title + items;
+      }
+    } catch(e) { /* keep static */ }
+  }
+
+  // ── Appointment Booking: Load doctors ──
+  async function loadDoctors(specialization) {
+    try {
+      var path = '/doctors/' + (specialization ? '?specialization=' + encodeURIComponent(specialization) : '');
+      var doctors = await apiFetch(path);
+      var container = document.querySelector('.booking-card .doctor-item')?.parentElement;
+      if (!container || doctors.length === 0) return;
+
+      // Remove existing doctor items
+      container.querySelectorAll('.doctor-item').forEach(function(el) { el.remove(); });
+
+      doctors.forEach(function(d) {
+        var div = document.createElement('div');
+        div.className = 'doctor-item';
+        div.dataset.doctorId = d.id;
+        div.innerHTML =
+          '<div class="doctor-avatar">' + d.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2) + '</div>' +
+          '<div class="doctor-info">' +
+            '<div class="doctor-name">' + d.name + '</div>' +
+            '<div class="doctor-spec">' + (d.specialization||'') + ' · ' + (d.hospital||'') + '</div>' +
+            '<div class="doctor-avail">Available</div>' +
+          '</div>' +
+          '<div class="doctor-fee">₹' + (d.fee||150) + '</div>';
+        div.onclick = function() {
+          container.querySelectorAll('.doctor-item').forEach(function(x){ x.style.background=''; });
+          div.style.background = 'var(--green-50)';
+          window._selectedDoctorId = d.id;
+          window._selectedDoctorName = d.name;
+          window._selectedDoctorFee = d.fee || 150;
+          loadSlots(d.id);
+        };
+        container.appendChild(div);
+      });
+    } catch(e) { /* keep static doctors */ }
+  }
+
+  async function loadSlots(doctorId) {
+    try {
+      var today = new Date().toISOString().split('T')[0];
+      var slots = await apiFetch('/doctors/' + doctorId + '/slots?date=' + today);
+      document.querySelectorAll('.slot').forEach(function(el, i) {
+        if (slots[i]) {
+          el.textContent = slots[i].time;
+          el.classList.toggle('unavail', !slots[i].available);
+        }
+      });
+    } catch(e) {}
+  }
+
+  // ── Confirm Appointment ──
+  var _origConfirmBtn = document.querySelector('[onclick="showScreen(\'booking-confirm\')"]');
+  if (_origConfirmBtn) {
+    _origConfirmBtn.onclick = async function() {
+      if (!_user) { showLoginModal('patient'); return; }
+      var doctorId = window._selectedDoctorId;
+      var selectedSlot = document.querySelector('.slot.selected');
+      if (!doctorId || !selectedSlot) {
+        showToast('Please select a doctor and time slot', '#c0392b'); return;
+      }
+      var inputs = document.querySelectorAll('#screen-booking .form-input');
+      var today = new Date().toISOString().split('T')[0];
+      try {
+        var result = await apiFetch('/appointments/', {
+          method: 'POST',
+          body: JSON.stringify({
+            doctor_id: doctorId,
+            patient_name: inputs[0]?.value || _user.name,
+            patient_village: inputs[1]?.value || _user.village || '',
+            patient_age: parseInt(inputs[2]?.value) || 30,
+            slot_time: selectedSlot.textContent,
+            slot_date: today,
+            consult_type: document.querySelector('.form-select')?.value === 'Chat' ? 'chat' : 'video'
+          })
+        });
+        _currentAppointmentId = result.appointment.id;
+        showToast('Appointment booked!');
+        showScreen('booking-confirm');
+      } catch(e) {
+        showToast(e.message, '#c0392b');
+      }
+    };
+  }
+
+  // ── AI Symptom: collect answers and submit ──
+  var _symptomMap = {
+    1: { key: 'main_symptom', map: { 'Fever / बुखार':'fever','Cough / खांसी':'cough','Stomach pain / पेट दर्द':'stomach_pain','Headache / सिरदर्द':'headache' }},
+    2: { key: 'duration',     map: { 'Less than 1 day / 1 दिन से कम':'less_than_1_day','1–3 days / 1-3 दिन':'1_3_days','4–7 days / 4-7 दिन':'4_7_days','More than a week / एक हफ्ते से ज्यादा':'more_than_week' }},
+    3: { key: 'severity',     map: { 'Mild — I can manage':'mild','Moderate — affecting daily activities':'moderate','Severe — need help immediately':'severe' }},
+    4: { key: 'additional_symptoms', map: { 'Breathlessness / सांस लेने में दिक्कत':'breathlessness','Vomiting / उल्टी':'vomiting','Weakness / कमजोरी':'weakness','None of the above / इनमें से कोई नहीं':'none' }},
+    5: { key: 'known_conditions', map: { 'Diabetes / मधुमेह':'diabetes','Hypertension / उच्च रक्तचाप':'hypertension','Asthma / दमा':'asthma','No known conditions / कोई नहीं':'none' }}
+  };
+
+  var _origNextQ = nextSymptomQ;
+  nextSymptomQ = function(current) {
+    var btn = event.target;
+    var mapping = _symptomMap[current];
+    if (mapping) {
+      var rawText = btn.getAttribute('data-en') || btn.textContent.trim();
+      _symptomAnswers[mapping.key] = mapping.map[rawText] || rawText.toLowerCase().replace(/\s+/g,'_');
+    }
+    _origNextQ(current);
+  };
+
+  var _origShowAIResult = showAIResult;
+  showAIResult = async function() {
+    var btn = event.target;
+    var mapping = _symptomMap[5];
+    var rawText = btn.getAttribute('data-en') || btn.textContent.trim();
+    _symptomAnswers[mapping.key] = mapping.map[rawText] || 'none';
+
+    _origShowAIResult.call(this);
+
+    // Submit to backend after 2s (matches the "AI thinking" animation)
+    if (_user) {
+      setTimeout(async function() {
+        try {
+          var payload = Object.assign({}, _symptomAnswers);
+          if (_currentAppointmentId) payload.appointment_id = _currentAppointmentId;
+          var result = await apiFetch('/symptoms/analyze', {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          // Update the AI result card with real backend response
+          var diagEl = document.querySelector('#ai-final [data-en^="Likely:"]');
+          if (diagEl) diagEl.setAttribute('data-en', 'Likely: ' + result.likely_diagnosis);
+          var advEl = document.querySelector('#ai-final [data-en^="Based on"]');
+          if (advEl) advEl.setAttribute('data-en', result.advice);
+          var priorityTag = document.querySelector('#ai-final .tag[data-en*="Priority"]');
+          if (priorityTag) priorityTag.setAttribute('data-en', result.priority_label);
+          if (lang === 'en') setLang('en');
+        } catch(e) { /* keep static result */ }
+      }, 2200);
+    }
+  };
+
+  // ── Health Worker: Register patient ──
+  var hwSaveBtn = document.querySelector('[onclick="showScreen(\'hw-register-confirm\')"]');
+  if (hwSaveBtn) {
+    hwSaveBtn.onclick = async function() {
+      if (!_user) { showLoginModal('health_worker'); return; }
+      var inputs = document.querySelectorAll('#screen-hw-register .form-input');
+      var selects = document.querySelectorAll('#screen-hw-register .form-select');
+      try {
+        await apiFetch('/health-worker/patients', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: inputs[0]?.value || '',
+            age: parseInt(inputs[1]?.value) || 0,
+            gender: (selects[0]?.value || 'male').toLowerCase(),
+            village: inputs[2]?.value || '',
+            phone: inputs[3]?.value || '',
+            chief_complaint: inputs[4]?.value || '',
+            temperature: inputs[5]?.value || null,
+            blood_pressure: inputs[6]?.value || null,
+            spo2: inputs[7]?.value || null,
+            weight: inputs[8]?.value || null,
+          })
+        });
+        showToast('Patient saved offline!');
+        showScreen('hw-register-confirm');
+      } catch(e) {
+        showToast(e.message, '#c0392b');
+      }
+    };
+  }
+
+  // ── Health Worker: Sync button ──
+  var syncBtn = document.querySelector('.sync-btn');
+  if (syncBtn) {
+    syncBtn.onclick = async function() {
+      if (!_user) return;
+      try {
+        var pending = await apiFetch('/health-worker/patients');
+        var unsynced = pending.filter(function(p){ return !p.synced; }).map(function(p){ return p.id; });
+        if (unsynced.length === 0) { showToast('All records already synced!'); return; }
+        var res = await apiFetch('/health-worker/sync', {
+          method: 'POST',
+          body: JSON.stringify({ record_ids: unsynced })
+        });
+        showToast(res.message);
+        document.querySelector('.sync-info').textContent = 'Last sync: just now · 0 records pending';
+      } catch(e) {
+        showToast(e.message, '#c0392b');
+      }
+    };
+  }
+
+  // ── Prescription: Download PDF (placeholder) ──
+  document.querySelectorAll('[onclick*="Download PDF"]').forEach(function(btn) {
+    btn.onclick = function() {
+      window.print();
+    };
+  });
+
+  // ── Prescription: Share via SMS ──
+  document.querySelectorAll('[onclick*="Share via SMS"]').forEach(function(btn) {
+    btn.onclick = async function() {
+      if (!_user) return;
+      showToast('Prescription link sent via SMS!');
+    };
+  });
+
+  // ── Load doctors when booking screen opens ──
+  var _origShowScreen = showScreen;
+  showScreen = function(id) {
+    _origShowScreen(id);
+    if (id === 'booking') loadDoctors();
+    if (id === 'patient-dash' && _user) loadPatientDash();
+    if (id === 'doctor-dash' && _user) loadDoctorDash();
+  };
+
+  // ── Restore session on page load ──
+  if (_user) {
+    if (_user.role === 'patient') loadPatientDash();
+    if (_user.role === 'doctor') loadDoctorDash();
+  }
+</script>
+</body>
+</html>
